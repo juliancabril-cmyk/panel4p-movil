@@ -158,11 +158,11 @@ inicio(){
   const kp=cur?`<div class="g2"><div class="c"><small>Asignados hoy</small><b>${num(S().asig_hoy)}</b>${miniLine(sa)}</div><div class="c"><small>Presentados</small><b>${P.length}</b>${miniBars(sp)}</div></div>`
     :`<div class="g2"><div class="c"><small>Asignados</small><b>${num(md.asig)}</b>${miniLine(sa)}</div><div class="c"><small>Presentados</small><b>${P.length}</b>${miniBars(sp)}</div></div><div class="g2" style="margin-top:12px"><div class="c"><small>Adjudicadas</small><b style="color:var(--ok)">${P.filter(x=>x.s==="ADJUDICADA").length}</b></div><div class="c"><small>Perdidas</small><b style="color:var(--bad)">${P.filter(x=>x.s==="PERDIDA").length}</b></div></div>`;
   const acc=cur?`<div class="act"><div><small>Última asignación ${esc(S().asig_ult||"—")}</small><b>Asignar procesos</b></div><button class="pill" data-o="asignar" ${pcOk()&&!corre()?"":"disabled"}>Asignar</button></div><div class="act"><div><small>Última revisión ${esc((S().rev||{}).hora||"—")}</small><b>Revisar SECOP</b></div><button class="pill" data-o="revisar" ${pcOk()&&!corre()?"":"disabled"}>Iniciar</button></div>`:"";
-  return `<div class="sec" style="margin-top:8px">Resumen del mes${mesSeg()}</div>${kp}${tarj}${acc}`;
+  return `${runCard()}<div class="sec" style="margin-top:8px">Resumen del mes${mesSeg()}</div>${kp}${tarj}${acc}`;
 },
 asignar(){
   const k=mesSel(),cur=k===KC(),md=MD(k),sa=semAsig(k);
-  return `<h1>Asignar</h1><div class="sub">Se ejecuta en tu PC desde licitaciones.info</div>
+  return `${runCard()}<h1>Asignar</h1><div class="sub">Se ejecuta en tu PC desde licitaciones.info</div>
   <div class="sec">${mesSeg()||"<span></span>"}<span>${num(md.asig)} en ${MES[+k.slice(5)-1]}</span></div>
   ${cur?`<div class="cl" style="max-width:none;width:100%"><div class="en"><i>PC</i><div><span>Computador de la oficina</span><span class="s">${pcOk()?"● En línea · listo":"● Sin conexión"}</span></div></div><div style="display:flex;justify-content:space-between;align-items:end"><span class="s">Asignados hoy</span><h4 style="font-size:36px">${num(S().asig_hoy)}</h4></div></div><div style="height:12px"></div>`:""}
   <div class="c"><div class="sec" style="margin:0 0 4px">Asignados por semana<span>${num(md.jul)?`Julián ${num(md.jul)} · Zulmary ${num(md.zul)}`:""}</span></div>${semHTML(sa,k)}</div>
@@ -171,7 +171,7 @@ asignar(){
 revisar(){
   const r=S().rev||{},ch=r.cambios||[],nv=r.nov||[],tn=num(S().novedad)||nv.length;
   const fila=x=>`<div class="rw"><span><span class="n">${esc(x.e)}</span><span class="m">${esc(x.n)} · ${esc(x.a)}</span></span></div>`;
-  return `<h1>Revisar SECOP</h1><div class="sub">Última revisión ${esc(r.dia||"")} ${esc(r.hora||"—")}${r.hoy?"":" · la de hoy está pendiente"} · ${num(r.total)} procesos</div>
+  return `${runCard()}<h1>Revisar SECOP</h1><div class="sub">Última revisión ${esc(r.dia||"")} ${esc(r.hora||"—")}${r.hoy?"":" · la de hoy está pendiente"} · ${num(r.total)} procesos</div>
   <div class="sec">Con novedad<span>${tn}</span></div>
   <div class="c">${nv.length?`<div class="bx">${nv.map(fila).join("")}</div>`:`<div class="em">${tn?"Hay "+tn+" por resolver en el PC":"Todo en orden"}</div>`}</div>
   <div class="sec">Cambios desde la revisión anterior<span>${ch.length}</span></div>
@@ -188,6 +188,12 @@ datos(){
   <div class="c" style="margin-top:12px"><div class="sec" style="margin:0 0 4px">Presentados por semana<span></span></div>${semHTML(semPres(k),k)}</div>
   <div class="c" style="margin-top:12px"><div class="sec" style="margin:0 0 4px">Lista del mes<span>${P.length}</span></div>${P.length?`<div class="bx">${P.map(x=>`<div class="rw"><span><span class="n">${esc(x.e||x.p)}</span><span class="m">${esc(x.n||"")} · ${esc(String(x.f||"").slice(8))} ${esc(MES[+k.slice(5)-1].slice(0,3))}</span><span>${estTag(x.s)}${x.l==="J"?'<span class="tg">Julián</span>':x.l==="Z"?'<span class="tg">Zulmary</span>':""}</span></span><b>${fM(x.v)}</b></div>`).join("")}</div>`:`<div class="em">Aún no hay presentados</div>`}</div>`;
 }};
+function eta(r){const av=r.av;if(!av||!av[0]||!r.seg)return "";const falta=av[1]-av[0],min=Math.round(r.seg*falta/av[0]/60);return falta<=0?"terminando…":"faltan "+falta+" · ~"+(min<1?"1":min)+" min"}
+function runCard(){
+  const r=S().run||{};if(!r.on)return "";
+  const av=r.av,pc=av&&av[1]?Math.round(av[0]*100/av[1]):0,rev=/revis/i.test(r.n||"");
+  return `<div class="cl" style="max-width:none;width:100%;margin-bottom:12px"><div><h4>${rev?"Revisando SECOP":/asign/i.test(r.n||"")?"Asignando procesos":"Trabajando…"}</h4><div class="s">${av?av[0]+" de "+av[1]+" · "+eta(r):"Arrancando…"}</div></div>${r.p?`<div class="en"><i>${esc(ini(r.pe||r.p))}</i><div><span>${esc(r.pe||r.p)}</span><span class="s">${esc(r.pn||r.p)}</span></div></div>`:""}<div style="height:6px;border-radius:9px;background:#ffffff33;overflow:hidden"><i style="display:block;height:100%;width:${pc}%;background:#fff;border-radius:9px"></i></div></div>`;
+}
 const NAV=[["inicio","⌂","Inicio"],["asignar","◍","Asignar"],["revisar","↻","Revisar"],["datos","▥","Datos"]];
 function navVis(){const cur=mesSel()===KC();return NAV.filter(n=>cur||n[0]==="inicio"||n[0]==="asignar"||n[0]==="datos")}
 function pintar(){
@@ -198,7 +204,7 @@ function pintar(){
     $("#nav").innerHTML=navVis().map(n=>`<button data-v="${n[0]}" class="${n[0]===St.vista?"on":""}"><b>${n[1]}</b>${n[2]}</button>`).join("");
     const p=pcOk();$("#pcs").className="pcs"+(p?" on":"");$("#pct").textContent=St.off?"Sin internet":St.stale?"Sin señal del PC":St.snap?(corre()?"PC ocupado":"PC en línea"):"Conectando…";
     const h=new Date().getHours();$("#sal").textContent=h<12?"Buen día,":h<19?"Buenas tardes,":"Buenas noches,";
-    const b=$("#bn");const ed=S()._rx?Math.max(0,Math.round((Date.now()-S()._rx)/60000)):0;const msg=S().demo?"Modo demo: datos de ejemplo. Conecta tu PC en ⚙":corre()?"El PC está ejecutando: "+((S().run||{}).n||"una orden")+"…":St.off?"Sin internet. Mostrando los últimos datos guardados":St.stale?(S()._rx?"Sin señal del PC. Datos de hace "+(ed>=60?Math.round(ed/60)+" h":ed+" min"):"Sin señal del PC. Aún no hay datos"):"";b.textContent=msg;b.classList.toggle("on",!!msg);
+    const b=$("#bn");const ed=S()._rx?Math.max(0,Math.round((Date.now()-S()._rx)/60000)):0;const msg=S().demo?"Modo demo: datos de ejemplo. Conecta tu PC en ⚙":corre()?"":St.off?"Sin internet. Mostrando los últimos datos guardados":St.stale?(S()._rx?"Sin señal del PC. Datos de hace "+(ed>=60?Math.round(ed/60)+" h":ed+" min"):"Sin señal del PC. Aún no hay datos"):"";b.textContent=msg;b.classList.toggle("on",!!msg);
   }catch(e){console.error(e);$("#v").innerHTML='<div class="em">Algo salió mal al mostrar los datos.<br>Desliza hacia abajo para reintentar.</div>'}
 }
 
@@ -257,7 +263,7 @@ window.addEventListener("online",()=>cargar().then(pintar));
 window.addEventListener("offline",()=>{St.off=true;pintar()});
 window.addEventListener("error",e=>console.error(e.message));
 window.addEventListener("unhandledrejection",e=>console.error(e.reason));
-setInterval(()=>{if(!document.hidden)cargar().then(pintar)},60000);
+let tk=0;setInterval(()=>{if(document.hidden)return;tk++;if(corre()||tk%3===0)cargar().then(pintar)},20000);
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
 try{const m=/^#c=([\w.-]{4,80})$/.exec(location.hash);if(m){Cfg.set({canal:m[1]});history.replaceState(null,"",location.pathname+location.search)}}catch(e){}
 cargar().then(pintar);pintar();
