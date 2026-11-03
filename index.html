@@ -83,7 +83,7 @@ const hoyStr=()=>{const d=HOY0;return d.getFullYear()+"-"+String(d.getMonth()+1)
 function demoSnap(){
   const h="2026-11-03";
   return {v:1,ts:new Date().toISOString(),hoy:h,demo:true,pc:{ok:true},
-    rev:{hora:"09:12",total:324,cambios:[{e:"Agencia Presidencial de Cooperación",n:"SASI-APC-06-2026",a:"Borrador → Selección"},{e:"Instituto Distrital de Gestión de Riesgos",n:"IDIGER-SA-MC-002-2026",a:"Abierta → Presentada"}]},
+    rev:{hora:"09:12",dia:"03/11",hoy:true,nov:[],total:324,cambios:[{e:"Agencia Presidencial de Cooperación",n:"SASI-APC-06-2026",a:"Borrador → Selección"},{e:"Instituto Distrital de Gestión de Riesgos",n:"IDIGER-SA-MC-002-2026",a:"Abierta → Presentada"}]},
     cierres:[{h:"5:00 PM",d:"Hoy",e:"Instituto Colombiano de Bienestar",v:86584478,s:"En alistamiento"},{h:"7:00 AM",d:"Mañana",e:"Alcaldía de Armenia - Quindío",v:85910000,s:"Abierta"},{h:"7:00 AM",d:"Mañana",e:"Alcaldía de Sabaneta - Antioquia",v:68722064,s:"Abierta"},{h:"8:00 AM",d:"Mañana",e:"Gobernación de Cauca",v:8615153376,s:"Abierta"}],
     asig_hoy:20,asig_ult:"08:55",run:{on:false},novedad:0,
     estados:{"2026-11":[["Borrador",199],["Manifestación de interés",99],["Sorteo",13],["Abierta",12],["Descartada",1]],"2026-10":[["Borrador",438],["Abierta",219]]},
@@ -169,10 +169,13 @@ asignar(){
   ${cur?`<div style="height:14px"></div><button class="btn" data-o="asignar" ${pcOk()&&!corre()?"":"disabled"}>Enviar al PC</button>`:""}`;
 },
 revisar(){
-  const r=S().rev||{},ch=r.cambios||[],cur=mesSel()===KC();
-  return `<h1>Revisar SECOP</h1><div class="sub">Última revisión ${esc(r.hora||"—")} · ${num(r.total)} procesos en seguimiento</div>
-  <div class="sec">Cambios detectados<span>${ch.length}</span></div>
-  <div class="c">${ch.length?`<div class="bx">${ch.map(x=>`<div class="rw"><span><span class="n">${esc(x.e)}</span><span class="m">${esc(x.n)} · ${esc(x.a)}</span></span></div>`).join("")}</div>`:`<div class="em">Sin cambios en la última revisión</div>`}</div>
+  const r=S().rev||{},ch=r.cambios||[],nv=r.nov||[],tn=num(S().novedad)||nv.length;
+  const fila=x=>`<div class="rw"><span><span class="n">${esc(x.e)}</span><span class="m">${esc(x.n)} · ${esc(x.a)}</span></span></div>`;
+  return `<h1>Revisar SECOP</h1><div class="sub">Última revisión ${esc(r.dia||"")} ${esc(r.hora||"—")}${r.hoy?"":" · la de hoy está pendiente"} · ${num(r.total)} procesos</div>
+  <div class="sec">Con novedad<span>${tn}</span></div>
+  <div class="c">${nv.length?`<div class="bx">${nv.map(fila).join("")}</div>`:`<div class="em">${tn?"Hay "+tn+" por resolver en el PC":"Todo en orden"}</div>`}</div>
+  <div class="sec">Cambios desde la revisión anterior<span>${ch.length}</span></div>
+  <div class="c">${ch.length?`<div class="bx" style="max-height:30vh">${ch.map(fila).join("")}</div>`:`<div class="em">Sin cambios</div>`}</div>
   <div style="height:14px"></div><button class="btn" data-o="revisar" ${pcOk()&&!corre()?"":"disabled"}>Revisar ahora</button>`;
 },
 datos(){
