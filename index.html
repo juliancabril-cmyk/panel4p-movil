@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eef1ee">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="4P SECOP">
+<title>4P SECOP</title>
+<style>
+:root{--bg:#eef1ee;--card:#fff;--ink:#14201b;--mut:#6f7b74;--ln:#e1e7e2;--g1:#0f5a43;--g2:#3f9a6c;--g3:#d9f2df;--dk:#16201b;--dkt:#fff;--ok:#1f9d63;--warn:#d98a12;--bad:#d9425b;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1411;--card:#16201b;--ink:#eef3ef;--mut:#8d9a93;--ln:#243029;--g3:#173a2b;--dk:#f2f5f3;--dkt:#0d1411;--ok:#34d399;--warn:#fbbf24;--bad:#ff6b82;color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:15px/1.35 -apple-system,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;overscroll-behavior:none}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
+#app{height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0)}
+.bn{display:none;margin:6px 18px 0;padding:8px 14px;border-radius:14px;font-size:12.5px;font-weight:600;background:#fbbf2426;color:var(--warn)}.bn.on{display:block}
+.top{display:flex;align-items:center;gap:12px;padding:14px 20px 6px;flex:none}
+.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#bfe8c8,#3f9a6c);display:grid;place-items:center;font-weight:800;color:#0b3d2e}
+.top small{display:block;color:var(--mut);font-size:12px}.top b{font-size:16px}
+.ic{margin-left:auto;width:42px;height:42px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:18px}
+.pcs{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mut)}.pcs i{width:8px;height:8px;border-radius:50%;background:var(--bad)}.pcs.on i{background:var(--ok)}
+main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 20px calc(96px + env(safe-area-inset-bottom,0));-webkit-overflow-scrolling:touch}
+h1{font-size:28px;letter-spacing:-.02em;margin:6px 0 2px}
+.sub{color:var(--mut);font-size:13px}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px;font-weight:700}.sec span,.sec button{color:var(--mut);font-weight:500;font-size:13px}
+.mes{display:inline-flex;background:var(--card);border-radius:99px;padding:3px}.mes button{padding:6px 14px;border-radius:99px;font-weight:600;font-size:13px;color:var(--mut)}.mes .on{background:var(--dk);color:var(--dkt)}
+.sl{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 20px;margin:0 -20px;padding:0 20px;scrollbar-width:none}.sl::-webkit-scrollbar{display:none}
+.cl{flex:none;width:calc(100% - 44px);max-width:320px;scroll-snap-align:start;min-height:142px;border-radius:26px;background:linear-gradient(150deg,var(--g2),var(--g1));color:#fff;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between}
+.cl.b{background:linear-gradient(150deg,#9bb86a,#4d7a3c)}
+.cl h4{margin:0;font-size:23px;letter-spacing:-.02em}.cl .s{opacity:.85;font-size:12.5px}
+.en{display:flex;align-items:center;gap:10px;font-size:13px;min-width:0}.en i{flex:none;width:34px;height:34px;border-radius:50%;background:#d9f2df;color:#0b3d2e;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:12px}.en div{min-width:0}.en div>span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.c{background:var(--card);border-radius:24px;padding:14px 16px;min-width:0}.c small{color:var(--mut);display:block;font-size:12px}.c b{font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.act{background:var(--card);border-radius:24px;padding:13px 16px;display:flex;align-items:center;gap:12px;margin-top:10px}.act>div{flex:1;min-width:0}.act small{display:block;color:var(--mut);font-size:12px}.act b{font-size:15px}
+.pill{border:1.5px solid var(--dk);border-radius:22px;padding:9px 18px;font-weight:700;font-size:14px}.pill[disabled]{opacity:.4}
+.btn{display:block;width:100%;border-radius:30px;background:var(--dk);color:var(--dkt);text-align:center;font-weight:700;font-size:16px;padding:16px}.btn[disabled]{opacity:.4}.btn.l{background:var(--card);color:var(--ink)}
+.wk{display:grid;grid-template-columns:84px 1fr 34px;gap:10px;align-items:center;padding:7px 0}.wk .t{height:6px;border-radius:9px;background:var(--ln)}.wk .t i{display:block;height:100%;border-radius:9px;background:var(--g2)}.wk b{text-align:right;font-variant-numeric:tabular-nums}.wk small{color:var(--mut)}
+.rw{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--ln)}.rw:first-child{border-top:0}.rw>span{min-width:0}.rw .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;font-weight:600}.rw .m{color:var(--mut);font-size:12px}.rw>b{white-space:nowrap}
+.tg{display:inline-block;border-radius:99px;padding:1px 9px;font-size:11px;font-weight:700;margin-right:5px;background:var(--g3);color:var(--ok)}.tg.r{background:#d9425b22;color:var(--bad)}.tg.w{background:#d98a1222;color:var(--warn)}
+.bx{max-height:46vh;overflow:auto}
+.stk{display:flex;gap:3px;height:8px;border-radius:9px;overflow:hidden;margin:4px 0 8px}.stk i{display:block}
+nav{position:fixed;left:20px;right:20px;bottom:calc(16px + env(safe-area-inset-bottom,0));background:var(--dk);color:var(--dkt);border-radius:30px;display:flex;padding:8px 6px;z-index:5}
+nav button{flex:1;text-align:center;font-size:10.5px;opacity:.6;padding:2px 0}nav button b{display:block;font-size:19px;font-weight:400;line-height:1.2}nav .on{opacity:1}
+.sh{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:9}.sh.on{display:flex}
+.sh>div{width:100%;background:var(--card);border-radius:30px 30px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0));display:flex;flex-direction:column;gap:12px}
+.sh h3{margin:0;font-size:22px}.sh label{font-size:12px;color:var(--mut);display:block;margin-bottom:4px}.sh input{width:100%;border:1px solid var(--ln);border-radius:14px;padding:12px;background:var(--bg);color:var(--ink);font:inherit}
+.ts{position:fixed;left:20px;right:20px;top:calc(12px + env(safe-area-inset-top,0));background:var(--dk);color:var(--dkt);border-radius:16px;padding:12px 16px;font-weight:600;z-index:20;opacity:0;transform:translateY(-8px);transition:.25s;pointer-events:none}.ts.on{opacity:1;transform:none}
+.em{color:var(--mut);text-align:center;padding:22px 0}
+@media (max-height:700px){h1{font-size:24px}.cl{min-height:120px}.act{padding:10px 14px}}
+</style></head>
+<body>
+<div id="app">
+<div class="bn" id="bn"></div>
+<div class="top"><div class="av">J</div><div><small id="sal">Buen día,</small><b>Julián Cárdenas</b><span class="pcs" id="pcs" style="display:flex"><i></i><span id="pct">Conectando…</span></span></div><button class="ic" id="bAj" aria-label="Ajustes">⚙</button></div>
+<main id="v"></main>
+<nav id="nav"></nav>
+</div>
+<div class="sh" id="sh"><div id="shc"></div></div>
+<div class="ts" id="ts" role="status"></div>
+<script>
+"use strict";
+/* ============ Utilidades ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num=v=>Number.isFinite(+v)?+v:0;
+const MES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const fM=v=>{v=num(v);return !v?"$ 0":v>=1e9?"$ "+(v/1e9).toFixed(1).replace(".",",")+" mil M":v>=1e6?"$ "+Math.round(v/1e6).toLocaleString("es-CO")+" M":"$ "+Math.round(v).toLocaleString("es-CO")};
+const mk=d=>d.slice(0,7);
+const ult=k=>new Date(+k.slice(0,4),+k.slice(5,7),0).getDate();
+const ini=s=>(String(s||"?").replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ ]/g," ").trim().split(/\s+/).filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join("")||"?").toUpperCase();
+const sget=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const sset=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+let tT; const toast=m=>{const t=$("#ts");t.textContent=m;t.classList.add("on");clearTimeout(tT);tT=setTimeout(()=>t.classList.remove("on"),2800)};
+
+/* ============ Datos (demo o PC) ============ */
+const DEMO={"asignados": 330, "asig_dias": {"2026-10-01": 37, "2026-10-03": 20, "2026-10-05": 16, "2026-10-07": 20, "2026-10-09": 35, "2026-10-11": 22, "2026-10-13": 10, "2026-10-15": 40, "2026-10-17": 24, "2026-10-19": 5, "2026-10-21": 23, "2026-10-23": 24, "2026-10-25": 37, "2026-10-27": 17}, "pres": [{"p": "X", "e": "Entidad de ejemplo 1", "n": "EJ-001-2026", "v": 261000000, "f": "2026-10-01", "s": "ADJUDICADA", "l": "J"}, {"p": "X", "e": "Entidad de ejemplo 2", "n": "EJ-002-2026", "v": 758000000, "f": "2026-10-03", "s": "PERDIDA", "l": "Z"}, {"p": "X", "e": "Entidad de ejemplo 3", "n": "EJ-003-2026", "v": 178000000, "f": "2026-10-05", "s": "PRESENTADA", "l": "J"}, {"p": "X", "e": "Entidad de ejemplo 4", "n": "EJ-004-2026", "v": 40000000, "f": "2026-10-07", "s": "PERDIDA", "l": "Z"}, {"p": "X", "e": "Entidad de ejemplo 5", "n": "EJ-005-2026", "v": 839000000, "f": "2026-10-09", "s": "PRESENTADA", "l": "J"}, {"p": "X", "e": "Entidad de ejemplo 6", "n": "EJ-006-2026", "v": 552000000, "f": "2026-10-11", "s": "ADJUDICADA", "l": "Z"}, {"p": "X", "e": "Entidad de ejemplo 7", "n": "EJ-007-2026", "v": 818000000, "f": "2026-10-13", "s": "PRESENTADA", "l": "J"}, {"p": "X", "e": "Entidad de ejemplo 8", "n": "EJ-008-2026", "v": 288000000, "f": "2026-10-15", "s": "PRESENTADA", "l": "J"}, {"p": "X", "e": "Entidad de ejemplo 9", "n": "EJ-009-2026", "v": 868000000, "f": "2026-10-17", "s": "ADJUDICADA", "l": "Z"}, {"p": "X", "e": "Entidad de ejemplo 10", "n": "EJ-010-2026", "v": 218000000, "f": "2026-10-19", "s": "PRESENTADA", "l": "Z"}, {"p": "X", "e": "Entidad de ejemplo 11", "n": "EJ-011-2026", "v": 316000000, "f": "2026-10-21", "s": "ADJUDICADA", "l": "J"}, {"p": "X", "e": "Entidad de ejemplo 12", "n": "EJ-012-2026", "v": 885000000, "f": "2026-10-23", "s": "ADJUDICADA", "l": "Z"}]};
+const HOY0=new Date();
+const hoyStr=()=>{const d=HOY0;return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+function demoSnap(){
+  const h="2026-11-03";
+  return {v:1,ts:new Date().toISOString(),hoy:h,demo:true,pc:{ok:true},
+    rev:{hora:"09:12",total:324,cambios:[{e:"Agencia Presidencial de Cooperación",n:"SASI-APC-06-2026",a:"Borrador → Selección"},{e:"Instituto Distrital de Gestión de Riesgos",n:"IDIGER-SA-MC-002-2026",a:"Abierta → Presentada"}]},
+    cierres:[{h:"5:00 PM",d:"Hoy",e:"Instituto Colombiano de Bienestar",v:86584478,s:"En alistamiento"},{h:"7:00 AM",d:"Mañana",e:"Alcaldía de Armenia - Quindío",v:85910000,s:"Abierta"},{h:"7:00 AM",d:"Mañana",e:"Alcaldía de Sabaneta - Antioquia",v:68722064,s:"Abierta"},{h:"8:00 AM",d:"Mañana",e:"Gobernación de Cauca",v:8615153376,s:"Abierta"}],
+    asig_hoy:20,asig_ult:"08:55",run:{on:false},novedad:0,
+    estados:{"2026-11":[["Borrador",199],["Manifestación de interés",99],["Sorteo",13],["Abierta",12],["Descartada",1]],"2026-10":[["Borrador",438],["Abierta",219]]},
+    meses:{"2026-10":{asig:DEMO.asignados,asig_dias:DEMO.asig_dias,jul:327,zul:330,pres:DEMO.pres},"2026-11":{asig:20,asig_dias:{"2026-11-03":20},jul:10,zul:10,pres:[]}}};
+}
+const Cfg={get(){try{return JSON.parse(sget("cfg4p")||"{}")}catch(e){return {}}},set(o){sset("cfg4p",JSON.stringify(o))}};
+const St={vista:"inicio",mes:null,snap:null,off:false,stale:false,pend:false};
+const T=(ms)=>{const c=new AbortController();setTimeout(()=>c.abort(),ms);return c.signal};
+const BASE="https://ntfy.sh/";
+async function gunzip(b64){
+  const bin=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+  const rs=new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip")));
+  return JSON.parse(await rs.text());
+}
+async function leerFoto(canal){
+  const r=await fetch(BASE+encodeURIComponent(canal)+"-datos/json?poll=1&since=25m",{signal:T(9000),cache:"no-store"});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const grupos={};
+  (await r.text()).split("\n").forEach(l=>{
+    if(!l.trim())return;let m;try{m=JSON.parse(l)}catch(e){return}
+    if(m.event!=="message"||typeof m.message!=="string"||m.message.slice(0,3)!=="G1:")return;
+    const p=m.message.split(":"),id=p[1],ij=(p[2]||"").split("/"),i=+ij[0],n=+ij[1];
+    if(!id||!i||!n)return;
+    const g=grupos[id]||(grupos[id]={n,t:0,c:{}});g.c[i]=p.slice(3).join(":");g.t=Math.max(g.t,m.time||0);
+  });
+  const ok=Object.values(grupos).filter(g=>Object.keys(g.c).length===g.n).sort((a,b)=>b.t-a.t)[0];
+  if(!ok)return null;
+  let d="";for(let i=1;i<=ok.n;i++)d+=ok.c[i];
+  const j=await gunzip(d);j._rx=ok.t*1000;return j;
+}
+async function cargar(){
+  const c=Cfg.get();
+  if(!c.canal){St.snap=demoSnap();St.off=false;St.stale=false;return}
+  if(!St.snap){try{St.snap=JSON.parse(sget("snap4p")||"null")}catch(e){St.snap=null}}
+  try{
+    const j=await leerFoto(c.canal);
+    St.off=false;
+    if(j){St.snap=j;St.stale=false;sset("snap4p",JSON.stringify(j))}
+    else St.stale=true;
+  }catch(e){if(e&&(e.name==="TypeError"||e.name==="AbortError"||/HTTP/.test(e.message||"")))St.off=true;else{St.off=false;St.stale=true}}
+}
+const S=()=>St.snap||{};
+const hoy=()=>S().hoy||hoyStr();
+const KC=()=>mk(hoy());
+const KM=()=>{const s=S().meses||{};return Object.keys(s).filter(k=>/^\d{4}-\d{2}$/.test(k)).sort()};
+const mesSel=()=>{const L=KM();return St.mes&&L.includes(St.mes)?St.mes:(L.includes(KC())?KC():L[L.length-1]||KC())};
+const MD=k=>((S().meses||{})[k])||{asig:0,asig_dias:{},pres:[]};
+const pcOk=()=>!!(S().pc&&S().pc.ok)&&!St.off&&!St.stale;
+const corre=()=>!!(S().run&&S().run.on);
+
+/* ============ Cálculos ============ */
+function semanas(k,items,getD,getV){
+  const u=ult(k),R=[[1,7],[8,14],[15,21],[22,u]];
+  return R.map(([a,b],i)=>{let n=0,v=0;items.forEach(x=>{const d=+String(getD(x)).slice(8,10);if(String(getD(x)).slice(0,7)===k&&d>=a&&d<=b){n+=getN(x);v+=getV?num(getV(x)):0}});return{i:i+1,a,b,n,v}});
+}
+const getN=x=>x&&x._n!=null?x._n:1;
+function semPres(k){return semanas(k,MD(k).pres||[],x=>x.f||"",x=>x.v)}
+function semAsig(k){const ad=MD(k).asig_dias||{};return semanas(k,Object.keys(ad).map(d=>({d,_n:num(ad[d])})),x=>x.d)}
+const hoyEnSem=(k,w)=>k===KC()&&+hoy().slice(8,10)>=w.a&&+hoy().slice(8,10)<=w.b;
+function semHTML(W,k){const mx=Math.max(1,...W.map(w=>w.n));return W.map(w=>{const on=hoyEnSem(k,w);return `<div class="wk"><span style="${on?"color:var(--warn);font-weight:700":""}">Sem ${w.i} <small>${w.a}–${w.b}</small></span><div class="t"><i style="width:${w.n?Math.max(5,w.n*100/mx):0}%;${on?"background:var(--warn)":""}"></i></div><b>${w.n}</b></div>`}).join("")}
+function miniBars(W){const mx=Math.max(1,...W.map(w=>w.n));return `<svg viewBox="0 0 120 44" width="100%" height="44" aria-hidden="true"><g fill="var(--g2)">${W.map((w,i)=>{const h=w.n?Math.max(6,w.n*40/mx):3;return `<rect x="${8+i*30}" y="${44-h}" width="12" height="${h}" rx="6" opacity="${w.n?1:.3}"/>`}).join("")}</g></svg>`}
+function miniLine(W){const mx=Math.max(1,...W.map(w=>w.n)),p=W.map((w,i)=>[10+i*33,38-w.n*32/mx]);return `<svg viewBox="0 0 120 44" width="100%" height="44" aria-hidden="true"><path d="M${p.map(x=>x.join(",")).join(" L")}" fill="none" stroke="var(--g2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${p.map(x=>`<circle cx="${x[0]}" cy="${x[1]}" r="3" fill="var(--g2)"/>`).join("")}</svg>`}
+const estTag=s=>{const m={PERDIDA:["Perdida","r"],PRESENTADA:["Presentada",""],ADJUDICADA:["Adjudicada",""],SUBSANAR:["Subsanar","w"],SUBSANADO:["Subsanado","w"]}[s]||[s||"—",""];return `<span class="tg ${m[1]}">${esc(m[0])}</span>`};
+
+/* ============ Vistas ============ */
+const mesSeg=()=>{const L=KM();if(L.length<2)return "";const k=mesSel();return `<div class="mes">${L.map(m=>`<button data-m="${m}" class="${m===k?"on":""}">${cap(MES[+m.slice(5)-1])}</button>`).join("")}</div>`};
+const V={
+inicio(){
+  const k=mesSel(),cur=k===KC(),md=MD(k),P=md.pres||[],ci=S().cierres||[];
+  const sa=semAsig(k),sp=semPres(k);
+  const tarj=cur?(ci.length?`<div class="sec">Próximos cierres<span>${ci.length}</span></div><div class="sl">${ci.slice(0,6).map((x,i)=>`<div class="cl ${i%2?"b":""}"><div><h4>${esc(x.d)} · ${esc(x.h)}</h4><div class="s">${esc(x.s||"")}</div></div><div class="en"><i>${esc(ini(x.e))}</i><div><span>${esc(x.e)}</span><span class="s">${fM(x.v)}</span></div></div></div>`).join("")}</div>`:`<div class="sec">Próximos cierres</div><div class="c em">Sin cierres próximos</div>`):"";
+  const kp=cur?`<div class="g2"><div class="c"><small>Asignados hoy</small><b>${num(S().asig_hoy)}</b>${miniLine(sa)}</div><div class="c"><small>Presentados</small><b>${P.length}</b>${miniBars(sp)}</div></div>`
+    :`<div class="g2"><div class="c"><small>Asignados</small><b>${num(md.asig)}</b>${miniLine(sa)}</div><div class="c"><small>Presentados</small><b>${P.length}</b>${miniBars(sp)}</div></div><div class="g2" style="margin-top:12px"><div class="c"><small>Adjudicadas</small><b style="color:var(--ok)">${P.filter(x=>x.s==="ADJUDICADA").length}</b></div><div class="c"><small>Perdidas</small><b style="color:var(--bad)">${P.filter(x=>x.s==="PERDIDA").length}</b></div></div>`;
+  const acc=cur?`<div class="act"><div><small>Última asignación ${esc(S().asig_ult||"—")}</small><b>Asignar procesos</b></div><button class="pill" data-o="asignar" ${pcOk()&&!corre()?"":"disabled"}>Asignar</button></div><div class="act"><div><small>Última revisión ${esc((S().rev||{}).hora||"—")}</small><b>Revisar SECOP</b></div><button class="pill" data-o="revisar" ${pcOk()&&!corre()?"":"disabled"}>Iniciar</button></div>`:"";
+  return `<div class="sec" style="margin-top:8px">Resumen del mes${mesSeg()}</div>${kp}${tarj}${acc}`;
+},
+asignar(){
+  const k=mesSel(),cur=k===KC(),md=MD(k),sa=semAsig(k);
+  return `<h1>Asignar</h1><div class="sub">Se ejecuta en tu PC desde licitaciones.info</div>
+  <div class="sec">${mesSeg()||"<span></span>"}<span>${num(md.asig)} en ${MES[+k.slice(5)-1]}</span></div>
+  ${cur?`<div class="cl" style="max-width:none;width:100%"><div class="en"><i>PC</i><div><span>Computador de la oficina</span><span class="s">${pcOk()?"● En línea · listo":"● Sin conexión"}</span></div></div><div style="display:flex;justify-content:space-between;align-items:end"><span class="s">Asignados hoy</span><h4 style="font-size:36px">${num(S().asig_hoy)}</h4></div></div><div style="height:12px"></div>`:""}
+  <div class="c"><div class="sec" style="margin:0 0 4px">Asignados por semana<span>${num(md.jul)?`Julián ${num(md.jul)} · Zulmary ${num(md.zul)}`:""}</span></div>${semHTML(sa,k)}</div>
+  ${cur?`<div style="height:14px"></div><button class="btn" data-o="asignar" ${pcOk()&&!corre()?"":"disabled"}>Enviar al PC</button>`:""}`;
+},
+revisar(){
+  const r=S().rev||{},ch=r.cambios||[],cur=mesSel()===KC();
+  return `<h1>Revisar SECOP</h1><div class="sub">Última revisión ${esc(r.hora||"—")} · ${num(r.total)} procesos en seguimiento</div>
+  <div class="sec">Cambios detectados<span>${ch.length}</span></div>
+  <div class="c">${ch.length?`<div class="bx">${ch.map(x=>`<div class="rw"><span><span class="n">${esc(x.e)}</span><span class="m">${esc(x.n)} · ${esc(x.a)}</span></span></div>`).join("")}</div>`:`<div class="em">Sin cambios en la última revisión</div>`}</div>
+  <div style="height:14px"></div><button class="btn" data-o="revisar" ${pcOk()&&!corre()?"":"disabled"}>Revisar ahora</button>`;
+},
+datos(){
+  const k=mesSel(),md=MD(k),P=(md.pres||[]).slice().sort((a,b)=>String(b.f).localeCompare(String(a.f))),E=(S().estados||{})[k]||[],tot=E.reduce((t,x)=>t+num(x[1]),0);
+  const cols=["#8a9a92","#3f9a6c","#9b6bff","#ff4d8d","#d98a12","#5aa9ff"];
+  const adj=P.filter(x=>x.s==="ADJUDICADA").length,per=P.filter(x=>x.s==="PERDIDA").length;
+  return `<h1>Datos</h1><div class="sec" style="margin-top:6px">${mesSeg()||"<span></span>"}<span>${P.length} presentados</span></div>
+  <div class="g2"><div class="c"><small>Valor presentado</small><b style="font-size:21px">${fM(P.reduce((t,x)=>t+num(x.v),0))}</b></div><div class="c"><small>Adjudicadas · Perdidas</small><b style="font-size:21px"><span style="color:var(--ok)">${adj}</span> · <span style="color:var(--bad)">${per}</span></b></div></div>
+  ${E.length?`<div class="c" style="margin-top:12px"><div class="sec" style="margin:0 0 6px">Procesos por estado<span>${tot}</span></div><div class="stk">${E.map((x,i)=>`<i style="flex:${Math.max(1,num(x[1]))};background:${cols[i%cols.length]}"></i>`).join("")}</div>${E.map((x,i)=>`<div class="rw"><span><span class="n"><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cols[i%cols.length]};margin-right:8px"></i>${esc(x[0])}</span></span><b>${num(x[1])}</b></div>`).join("")}</div>`:""}
+  <div class="c" style="margin-top:12px"><div class="sec" style="margin:0 0 4px">Presentados por semana<span></span></div>${semHTML(semPres(k),k)}</div>
+  <div class="c" style="margin-top:12px"><div class="sec" style="margin:0 0 4px">Lista del mes<span>${P.length}</span></div>${P.length?`<div class="bx">${P.map(x=>`<div class="rw"><span><span class="n">${esc(x.e||x.p)}</span><span class="m">${esc(x.n||"")} · ${esc(String(x.f||"").slice(8))} ${esc(MES[+k.slice(5)-1].slice(0,3))}</span><span>${estTag(x.s)}${x.l==="J"?'<span class="tg">Julián</span>':x.l==="Z"?'<span class="tg">Zulmary</span>':""}</span></span><b>${fM(x.v)}</b></div>`).join("")}</div>`:`<div class="em">Aún no hay presentados</div>`}</div>`;
+}};
+const NAV=[["inicio","⌂","Inicio"],["asignar","◍","Asignar"],["revisar","↻","Revisar"],["datos","▥","Datos"]];
+function navVis(){const cur=mesSel()===KC();return NAV.filter(n=>cur||n[0]==="inicio"||n[0]==="asignar"||n[0]==="datos")}
+function pintar(){
+  try{
+    if(!V[St.vista])St.vista="inicio";
+    if(mesSel()!==KC()&&St.vista==="revisar")St.vista="inicio";
+    $("#v").innerHTML=V[St.vista]();
+    $("#nav").innerHTML=navVis().map(n=>`<button data-v="${n[0]}" class="${n[0]===St.vista?"on":""}"><b>${n[1]}</b>${n[2]}</button>`).join("");
+    const p=pcOk();$("#pcs").className="pcs"+(p?" on":"");$("#pct").textContent=St.off?"Sin internet":St.stale?"Sin señal del PC":St.snap?(corre()?"PC ocupado":"PC en línea"):"Conectando…";
+    const h=new Date().getHours();$("#sal").textContent=h<12?"Buen día,":h<19?"Buenas tardes,":"Buenas noches,";
+    const b=$("#bn");const ed=S()._rx?Math.max(0,Math.round((Date.now()-S()._rx)/60000)):0;const msg=S().demo?"Modo demo: datos de ejemplo. Conecta tu PC en ⚙":corre()?"El PC está ejecutando: "+((S().run||{}).n||"una orden")+"…":St.off?"Sin internet. Mostrando los últimos datos guardados":St.stale?(S()._rx?"Sin señal del PC. Datos de hace "+(ed>=60?Math.round(ed/60)+" h":ed+" min"):"Sin señal del PC. Aún no hay datos"):"";b.textContent=msg;b.classList.toggle("on",!!msg);
+  }catch(e){console.error(e);$("#v").innerHTML='<div class="em">Algo salió mal al mostrar los datos.<br>Desliza hacia abajo para reintentar.</div>'}
+}
+
+/* ============ Órdenes ============ */
+const ORD={asignar:["Asignar procesos","El PC abrirá licitaciones.info y asignará los procesos pendientes."],revisar:["Revisar SECOP","El PC revisará los procesos en seguimiento en SECOP."]};
+function hoja(h){$("#shc").innerHTML=h;$("#sh").classList.add("on")}
+function cerrar(){$("#sh").classList.remove("on")}
+function confirmar(t){
+  if(St.pend){toast("Ya hay una orden en curso");return}
+  if(!pcOk()){toast("El PC no está en línea");return}
+  hoja(`<h3>${ORD[t][0]}</h3><div class="sub">${ORD[t][1]}</div><button class="btn" id="ok">Enviar al PC</button><button class="btn l" id="no">Cancelar</button>`);
+  $("#ok").onclick=()=>enviar(t);$("#no").onclick=cerrar;
+}
+async function mandar(t){
+  const c=Cfg.get();
+  if(!c.canal){await new Promise(r=>setTimeout(r,500));return}
+  const r=await fetch(BASE+encodeURIComponent(c.canal),{method:"POST",body:t,signal:T(9000)});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+}
+async function enviar(t){
+  cerrar();St.pend=true;
+  try{
+    await mandar(t);toast("Orden enviada al PC");
+    let n=0;const iv=setInterval(async()=>{n++;await cargar();pintar();if(n>=15||(n>2&&!corre()&&!St.pend)){clearInterval(iv)}},6000);
+    setTimeout(()=>{St.pend=false},12000);
+  }catch(e){St.pend=false;toast("No se pudo enviar. Revisa tu conexión")}
+}
+async function refrescar(){
+  toast("Actualizando…");
+  try{await mandar("snap")}catch(e){}
+  await new Promise(r=>setTimeout(r,Cfg.get().canal?4500:300));
+  await cargar();pintar();
+}
+/* ============ Ajustes ============ */
+function ajustes(){
+  const c=Cfg.get();
+  hoja(`<h3>Conexión con el PC</h3><div class="sub">Escribe el canal que usa tu panel. Si lo dejas vacío, la app muestra datos de ejemplo.</div><div><label for="f2">Canal</label><input id="f2" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(c.canal||"")}"></div><button class="btn" id="gd">Guardar</button><button class="btn l" id="ce">Cerrar</button>`);
+  $("#ce").onclick=cerrar;$("#gd").onclick=()=>{Cfg.set({canal:$("#f2").value.trim()});cerrar();St.snap=null;cargar().then(()=>{pintar();toast("Guardado")})};
+}
+
+/* ============ Eventos ============ */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-v],[data-m],[data-o]");
+  if(e.target.id==="sh"){cerrar();return}
+  if(!t)return;
+  if(t.dataset.v){St.vista=t.dataset.v;pintar();$("#v").scrollTop=0}
+  else if(t.dataset.m){St.mes=t.dataset.m;pintar();$("#v").scrollTop=0}
+  else if(t.dataset.o){confirmar(t.dataset.o)}
+});
+$("#bAj").onclick=ajustes;
+let y0=null;
+$("#v").addEventListener("touchstart",e=>{y0=$("#v").scrollTop===0?e.touches[0].clientY:null},{passive:true});
+$("#v").addEventListener("touchend",e=>{if(y0!=null&&e.changedTouches[0].clientY-y0>110)refrescar();y0=null},{passive:true});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refrescar()});
+window.addEventListener("online",()=>cargar().then(pintar));
+window.addEventListener("offline",()=>{St.off=true;pintar()});
+window.addEventListener("error",e=>console.error(e.message));
+window.addEventListener("unhandledrejection",e=>console.error(e.reason));
+setInterval(()=>{if(!document.hidden)cargar().then(pintar)},60000);
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+try{const m=/^#c=([\w.-]{4,80})$/.exec(location.hash);if(m){Cfg.set({canal:m[1]});history.replaceState(null,"",location.pathname+location.search)}}catch(e){}
+cargar().then(pintar);pintar();
+</script></body></html>
